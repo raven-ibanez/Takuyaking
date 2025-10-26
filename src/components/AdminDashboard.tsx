@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, Save, X, ArrowLeft, Coffee, TrendingUp, Package, Users, Lock, FolderOpen, CreditCard, Settings } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, ArrowLeft, Coffee, TrendingUp, Package, Users, Lock, FolderOpen, CreditCard, Settings, RefreshCw } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 import { addOnCategories } from '../data/menuData';
 import { useMenu } from '../hooks/useMenu';
-import { useCategories, Category } from '../hooks/useCategories';
+import { useCategories } from '../hooks/useCategories';
 import ImageUpload from './ImageUpload';
 import CategoryManager from './CategoryManager';
 import PaymentMethodManager from './PaymentMethodManager';
@@ -15,7 +15,7 @@ const AdminDashboard: React.FC = () => {
   });
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  const { menuItems, loading, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
+  const { menuItems, loading, addMenuItem, updateMenuItem, deleteMenuItem, refetch } = useMenu();
   const { categories } = useCategories();
   const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings'>('dashboard');
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
@@ -59,7 +59,11 @@ const AdminDashboard: React.FC = () => {
       try {
         setIsProcessing(true);
         await deleteMenuItem(id);
+        // Refresh the menu data to ensure frontend gets updated data
+        await refetch();
+        alert('Item deleted successfully!');
       } catch (error) {
+        console.error('Error deleting item:', error);
         alert('Failed to delete item. Please try again.');
       } finally {
         setIsProcessing(false);
@@ -74,15 +78,24 @@ const AdminDashboard: React.FC = () => {
     }
 
     try {
+      setIsProcessing(true);
       if (editingItem) {
         await updateMenuItem(editingItem.id, formData);
       } else {
         await addMenuItem(formData as Omit<MenuItem, 'id'>);
       }
+      
+      // Refresh the menu data to ensure frontend gets updated data
+      await refetch();
+      
       setCurrentView('items');
       setEditingItem(null);
+      alert('Item saved successfully!');
     } catch (error) {
-      alert('Failed to save item');
+      console.error('Error saving item:', error);
+      alert('Failed to save item. Please try again.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -113,10 +126,15 @@ const AdminDashboard: React.FC = () => {
         for (const itemId of selectedItems) {
           await deleteMenuItem(itemId);
         }
+        
+        // Refresh the menu data to ensure frontend gets updated data
+        await refetch();
+        
         setSelectedItems([]);
         setShowBulkActions(false);
         alert(`Successfully deleted ${selectedItems.length} item(s).`);
       } catch (error) {
+        console.error('Error in bulk delete:', error);
         alert('Failed to delete some items. Please try again.');
       } finally {
         setIsProcessing(false);
@@ -140,10 +158,14 @@ const AdminDashboard: React.FC = () => {
             await updateMenuItem(itemId, { ...item, category: newCategoryId });
           }
         }
+        // Refresh the menu data to ensure frontend gets updated data
+        await refetch();
+        
         setSelectedItems([]);
         setShowBulkActions(false);
         alert(`Successfully updated category for ${selectedItems.length} item(s)`);
       } catch (error) {
+        console.error('Error in bulk category change:', error);
         alert('Failed to update some items');
       } finally {
         setIsProcessing(false);
@@ -232,7 +254,7 @@ const AdminDashboard: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'ClickEats@Admin!2025') {
+    if (password === 'Takuyaking@Admin!2025') {
       setIsAuthenticated(true);
       localStorage.setItem('beracah_admin_auth', 'true');
       setLoginError('');
@@ -596,6 +618,14 @@ const AdminDashboard: React.FC = () => {
                   </div>
                 )}
                 <button
+                  onClick={refetch}
+                  disabled={isProcessing}
+                  className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50"
+                >
+                  <RefreshCw className={`h-4 w-4 ${isProcessing ? 'animate-spin' : ''}`} />
+                  <span>Refresh</span>
+                </button>
+                <button
                   onClick={handleAddItem}
                   className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200"
                 >
@@ -934,7 +964,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Coffee className="h-8 w-8 text-black" />
-              <h1 className="text-2xl font-noto font-semibold text-black">ClickEats Admin</h1>
+              <h1 className="text-2xl font-noto font-semibold text-black">Takuyaking Admin</h1>
             </div>
             <div className="flex items-center space-x-4">
               <a

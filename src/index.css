@@ -2,14 +2,230 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ramen Yard Custom Styles */
-/* Minimal helpers for ramen palette when needed outside tailwind tokens */
-.bg-ramen-cream { background-color: #FFF3E0; }
-.bg-ramen-beige { background-color: #F7E7CE; }
-.text-ramen-red { color: #D7263D; }
-.text-ramen-dark { color: #0B0A0A; }
-.border-ramen-sesame { border-color: #D1C7B7; }
-.ring-ramen-gold { --tw-ring-color: #E0A106; }
+/* Takuya King Custom Styles */
+/* Sophisticated, muted color palette */
+:root {
+  --takuya-yellow: #F4E4BC;
+  --takuya-red: #B91C1C;
+  --takuya-dark-red: #7F1D1D;
+  --takuya-black: #1F2937;
+  --takuya-white: #FFFFFF;
+  --takuya-cream: #F9F7F4;
+  --takuya-orange: #D97706;
+  --takuya-gray: #6B7280;
+  --takuya-light-gray: #F3F4F6;
+}
+
+/* Subtle background */
+body {
+  background: linear-gradient(135deg, var(--takuya-cream) 0%, var(--takuya-light-gray) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Takuya King Brand Colors */
+.bg-takuya-yellow { background-color: var(--takuya-yellow); }
+.bg-takuya-red { background-color: var(--takuya-red); }
+.bg-takuya-dark-red { background-color: var(--takuya-dark-red); }
+.bg-takuya-cream { background-color: var(--takuya-cream); }
+.bg-takuya-orange { background-color: var(--takuya-orange); }
+
+.text-takuya-red { color: var(--takuya-red); }
+.text-takuya-dark-red { color: var(--takuya-dark-red); }
+.text-takuya-black { color: var(--takuya-black); }
+
+.border-takuya-red { border-color: var(--takuya-red); }
+.border-takuya-dark-red { border-color: var(--takuya-dark-red); }
+
+/* Japanese-inspired decorative elements */
+.japanese-pattern {
+  background-image: 
+    radial-gradient(circle at 20px 20px, var(--takuya-red) 2px, transparent 2px),
+    radial-gradient(circle at 40px 40px, var(--takuya-dark-red) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.1;
+}
+
+/* Octopus-themed decorative elements */
+.octopus-tentacle {
+  position: relative;
+}
+
+.octopus-tentacle::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 20px;
+  background: var(--takuya-red);
+  border-radius: 2px;
+  animation: wave 2s ease-in-out infinite;
+}
+
+.octopus-tentacle::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--takuya-red);
+  border-radius: 50%;
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  50% { transform: translateX(-50%) rotate(10deg); }
+}
+
+/* Elegant card styling */
+.takuya-card {
+  background: var(--takuya-white);
+  border: 1px solid var(--takuya-gray);
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.takuya-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--takuya-red), var(--takuya-orange));
+  opacity: 0.7;
+}
+
+.takuya-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+  border-color: var(--takuya-red);
+}
+
+/* Refined button styling */
+.takuya-button {
+  background: var(--takuya-red);
+  color: var(--takuya-white);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(185, 28, 28, 0.2);
+}
+
+.takuya-button:hover {
+  background: var(--takuya-dark-red);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
+}
+
+/* Clean header styling */
+.takuya-header {
+  background: var(--takuya-white);
+  border-bottom: 1px solid var(--takuya-gray);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Subtle menu item cards */
+.menu-item-card {
+  background: var(--takuya-white);
+  border: 1px solid var(--takuya-gray);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.menu-item-card:hover {
+  border-color: var(--takuya-red);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.menu-item-card::after {
+  content: '🐙';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--takuya-white);
+  border: 1px solid var(--takuya-red);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Refined category tabs */
+.category-tab {
+  background: var(--takuya-white);
+  border: 1px solid var(--takuya-gray);
+  border-radius: 20px;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: var(--takuya-gray);
+  touch-action: manipulation;
+}
+
+.category-tab.active {
+  background: var(--takuya-red);
+  color: var(--takuya-white);
+  border-color: var(--takuya-red);
+}
+
+.category-tab:hover {
+  background: var(--takuya-light-gray);
+  border-color: var(--takuya-red);
+  color: var(--takuya-red);
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  .category-tab {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+  
+  /* Ensure touch targets are at least 44px */
+  .touch-manipulation {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improve scrolling on mobile */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Cart styling */
+.cart-item {
+  background: var(--takuya-white);
+  border: 2px solid var(--takuya-red);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
 
 /* Hide scrollbar for mobile nav */
 .scrollbar-hide {
@@ -35,4 +251,40 @@ img {
   top: -9999px;
   width: 1px;
   height: 1px;
+}
+
+/* Floating elements animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Japanese lantern effect */
+.lantern-effect {
+  background: linear-gradient(45deg, var(--takuya-red), var(--takuya-orange));
+  border-radius: 50%;
+  box-shadow: 
+    0 0 20px var(--takuya-red),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .takuya-card {
+    border-radius: 15px;
+  }
+  
+  .takuya-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .category-tab {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 }

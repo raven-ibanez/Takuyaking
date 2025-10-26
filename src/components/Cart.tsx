@@ -23,14 +23,14 @@ const Cart: React.FC<CartProps> = ({
 }) => {
   if (cartItems.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="text-center py-16">
-          <div className="text-6xl mb-4">☕</div>
-          <h2 className="text-2xl font-playfair font-medium text-black mb-2">Your cart is empty</h2>
-          <p className="text-gray-600 mb-6">Add some delicious items to get started!</p>
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12">
+        <div className="text-center py-12 sm:py-16">
+          <div className="text-4xl sm:text-6xl mb-4">☕</div>
+          <h2 className="text-xl sm:text-2xl font-playfair font-medium text-black mb-2">Your cart is empty</h2>
+          <p className="text-sm sm:text-base text-gray-600 mb-6">Add some delicious items to get started!</p>
           <button
             onClick={onContinueShopping}
-            className="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 transition-all duration-200"
+            className="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 transition-all duration-200 touch-manipulation text-sm sm:text-base"
           >
             Browse Menu
           </button>
@@ -40,20 +40,19 @@ const Cart: React.FC<CartProps> = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
         <button
           onClick={onContinueShopping}
-          className="flex items-center space-x-2 text-gray-600 hover:text-black transition-colors duration-200"
+          className="flex items-center space-x-2 text-gray-600 hover:text-black transition-colors duration-200 touch-manipulation"
         >
-          <ArrowLeft className="h-5 w-5" />
-          <span>Continue Shopping</span>
+          <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">Continue Shopping</span>
         </button>
-        <h1 className="text-3xl font-playfair font-semibold text-black">Your Cart</h1>
-        <h1 className="text-3xl font-noto font-semibold text-black">Your Cart</h1>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-black">Your Cart</h1>
         <button
           onClick={clearCart}
-          className="text-red-500 hover:text-red-600 transition-colors duration-200"
+          className="text-red-500 hover:text-red-600 transition-colors duration-200 text-sm sm:text-base touch-manipulation"
         >
           Clear All
         </button>

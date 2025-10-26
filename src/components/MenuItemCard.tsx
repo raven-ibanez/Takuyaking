@@ -22,11 +22,10 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   const [selectedAddOns, setSelectedAddOns] = useState<(AddOn & { quantity: number })[]>([]);
 
   const calculatePrice = () => {
-    // Use effective price (discounted or regular) as base
-    let price = item.effectivePrice || item.basePrice;
-    if (selectedVariation) {
-      price = (item.effectivePrice || item.basePrice) + selectedVariation.price;
-    }
+    // Use variation price as total price, or base price if no variation selected
+    let price = selectedVariation ? selectedVariation.price : (item.effectivePrice || item.basePrice);
+    
+    // Add add-on prices
     selectedAddOns.forEach(addOn => {
       price += addOn.price * addOn.quantity;
     });
@@ -93,9 +92,9 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 
   return (
     <>
-      <div className={`bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group animate-scale-in border border-gray-100 ${!item.available ? 'opacity-60' : ''}`}>
+      <div className={`menu-item-card takuya-card overflow-hidden group ${!item.available ? 'opacity-60' : ''}`}>
         {/* Image Container with Badges */}
-        <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="relative h-40 sm:h-48 bg-gradient-to-br from-gray-50 to-gray-100">
           {item.image ? (
             <img
               src={item.image}
@@ -114,58 +113,58 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           </div>
           
           {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col gap-1 sm:gap-2">
             {item.isOnDiscount && item.discountPrice && (
-              <div className="bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
-                SALE
+              <div className="bg-takuya-red text-white text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-lg animate-pulse border-2 border-takuya-yellow">
+                🔥 <span className="hidden sm:inline">SALE</span>
               </div>
             )}
             {item.popular && (
-              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                ⭐ POPULAR
+              <div className="bg-takuya-yellow text-takuya-red text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-lg border-2 border-takuya-red">
+                👑 <span className="hidden sm:inline">POPULAR</span>
               </div>
             )}
           </div>
           
           {!item.available && (
-            <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-              UNAVAILABLE
+            <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-takuya-dark-red text-white text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-lg border-2 border-takuya-yellow">
+              ❌ <span className="hidden sm:inline">UNAVAILABLE</span>
             </div>
           )}
           
           {/* Discount Percentage Badge */}
           {item.isOnDiscount && item.discountPrice && (
-            <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-red-600 text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+            <div className="absolute bottom-3 right-3 bg-takuya-yellow/90 backdrop-blur-sm text-takuya-red text-xs font-bold px-2 py-1 rounded-full shadow-lg border border-takuya-red">
               {Math.round(((item.basePrice - item.discountPrice) / item.basePrice) * 100)}% OFF
             </div>
           )}
         </div>
         
         {/* Content */}
-        <div className="p-5">
-          <div className="flex items-start justify-between mb-3">
-            <h4 className="text-lg font-semibold text-gray-900 leading-tight flex-1 pr-2">{item.name}</h4>
+        <div className="p-3 sm:p-5">
+          <div className="flex items-start justify-between mb-2 sm:mb-3">
+            <h4 className="text-base sm:text-lg font-bold text-takuya-red leading-tight flex-1 pr-2">{item.name}</h4>
             {item.variations && item.variations.length > 0 && (
-              <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
+              <div className="text-xs text-takuya-red bg-takuya-yellow px-2 py-1 rounded-full whitespace-nowrap border border-takuya-red">
                 {item.variations.length} sizes
               </div>
             )}
           </div>
           
-          <p className={`text-sm mb-4 leading-relaxed ${!item.available ? 'text-gray-400' : 'text-gray-600'}`}>
+          <p className={`text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed ${!item.available ? 'text-gray-400' : 'text-takuya-black'}`}>
             {!item.available ? 'Currently Unavailable' : item.description}
           </p>
           
           {/* Pricing Section */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
             <div className="flex-1">
               {item.isOnDiscount && item.discountPrice ? (
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-red-600">
+                    <span className="text-lg sm:text-2xl font-bold text-takuya-red">
                       ₱{item.discountPrice.toFixed(2)}
                     </span>
-                    <span className="text-sm text-gray-500 line-through">
+                    <span className="text-xs sm:text-sm text-gray-500 line-through">
                       ₱{item.basePrice.toFixed(2)}
                     </span>
                   </div>
@@ -174,7 +173,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-lg sm:text-2xl font-bold text-takuya-red">
                   ₱{item.basePrice.toFixed(2)}
                 </div>
               )}
@@ -191,31 +190,31 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               {!item.available ? (
                 <button
                   disabled
-                  className="bg-gray-200 text-gray-500 px-4 py-2.5 rounded-xl cursor-not-allowed font-medium text-sm"
+                  className="bg-gray-200 text-gray-500 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl cursor-not-allowed font-medium text-xs sm:text-sm touch-manipulation"
                 >
                   Unavailable
                 </button>
               ) : quantity === 0 ? (
                 <button
                   onClick={handleAddToCart}
-                  className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2.5 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105 font-medium text-sm shadow-lg hover:shadow-xl"
+                  className="takuya-button px-4 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm touch-manipulation"
                 >
-                  {item.variations?.length || item.addOns?.length ? 'Customize' : 'Add to Cart'}
+                  {item.variations?.length || item.addOns?.length ? '🐙 Customize' : '🛒 Add to Cart'}
                 </button>
               ) : (
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-1 border border-yellow-200">
+                <div className="flex items-center space-x-1 sm:space-x-2 bg-takuya-yellow rounded-xl p-1 border-2 border-takuya-red">
                   <button
                     onClick={handleDecrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
+                    className="p-1.5 sm:p-2 hover:bg-takuya-red hover:text-white rounded-lg transition-colors duration-200 hover:scale-110 touch-manipulation"
                   >
-                    <Minus className="h-4 w-4 text-gray-700" />
+                    <Minus className="h-3 w-3 sm:h-4 sm:w-4 text-takuya-red" />
                   </button>
-                  <span className="font-bold text-gray-900 min-w-[28px] text-center text-sm">{quantity}</span>
+                  <span className="font-bold text-takuya-red min-w-[24px] sm:min-w-[28px] text-center text-xs sm:text-sm">{quantity}</span>
                   <button
                     onClick={handleIncrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
+                    className="p-1.5 sm:p-2 hover:bg-takuya-red hover:text-white rounded-lg transition-colors duration-200 hover:scale-110 touch-manipulation"
                   >
-                    <Plus className="h-4 w-4 text-gray-700" />
+                    <Plus className="h-3 w-3 sm:h-4 sm:w-4 text-takuya-red" />
                   </button>
                 </div>
               )}
@@ -224,8 +223,8 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 
           {/* Add-ons indicator */}
           {item.addOns && item.addOns.length > 0 && (
-            <div className="flex items-center space-x-1 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-lg">
-              <span>+</span>
+            <div className="flex items-center space-x-1 text-xs text-takuya-red bg-takuya-cream px-2 py-1 rounded-lg border border-takuya-red">
+              <span>🐙</span>
               <span>{item.addOns.length} add-on{item.addOns.length > 1 ? 's' : ''} available</span>
             </div>
           )}
@@ -275,7 +274,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                           <span className="font-medium text-gray-900">{variation.name}</span>
                         </div>
                         <span className="text-gray-900 font-semibold">
-                          ₱{((item.effectivePrice || item.basePrice) + variation.price).toFixed(2)}
+                          ₱{variation.price.toFixed(2)}
                         </span>
                       </label>
                     ))}
