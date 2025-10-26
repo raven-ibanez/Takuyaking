@@ -20,6 +20,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     item.variations?.[0]
   );
   const [selectedAddOns, setSelectedAddOns] = useState<(AddOn & { quantity: number })[]>([]);
+  const [customQuantity, setCustomQuantity] = useState(1);
 
   const calculatePrice = () => {
     // Use variation price as total price, or base price if no variation selected
@@ -45,9 +46,10 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     const addOnsForCart: AddOn[] = selectedAddOns.flatMap(addOn => 
       Array(addOn.quantity).fill({ ...addOn, quantity: undefined })
     );
-    onAddToCart(item, 1, selectedVariation, addOnsForCart);
+    onAddToCart(item, customQuantity, selectedVariation, addOnsForCart);
     setShowCustomization(false);
     setSelectedAddOns([]);
+    setCustomQuantity(1);
   };
 
   const handleIncrement = () => {
@@ -350,11 +352,34 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 </div>
               )}
 
+              {/* Quantity Selector */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-4">Quantity</h4>
+                <div className="flex items-center justify-center space-x-4">
+                  <button
+                    onClick={() => setCustomQuantity(Math.max(1, customQuantity - 1))}
+                    className="w-12 h-12 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors duration-200 touch-manipulation"
+                  >
+                    <Minus className="h-5 w-5 sm:h-4 sm:w-4 text-gray-600" />
+                  </button>
+                  <span className="text-2xl font-bold text-gray-900 min-w-[60px] text-center">
+                    {customQuantity}
+                  </span>
+                  <button
+                    onClick={() => setCustomQuantity(Math.min(10, customQuantity + 1))}
+                    className="w-12 h-12 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors duration-200 touch-manipulation"
+                  >
+                    <Plus className="h-5 w-5 sm:h-4 sm:w-4 text-gray-600" />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 text-center mt-2">Max: 10 items</p>
+              </div>
+
               {/* Price Summary */}
               <div className="border-t border-gray-200 pt-4 mb-6">
                 <div className="flex items-center justify-between text-2xl font-bold text-gray-900">
                   <span>Total:</span>
-                  <span className="text-red-600">₱{calculatePrice().toFixed(2)}</span>
+                  <span className="text-red-600">₱{(calculatePrice() * customQuantity).toFixed(2)}</span>
                 </div>
               </div>
 
@@ -363,7 +388,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <ShoppingCart className="h-5 w-5" />
-                <span>Add to Cart - ₱{calculatePrice().toFixed(2)}</span>
+                <span>Add to Cart - ₱{(calculatePrice() * customQuantity).toFixed(2)}</span>
               </button>
             </div>
           </div>
