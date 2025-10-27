@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Minus, X, ShoppingCart } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 
@@ -16,11 +16,21 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   onUpdateQuantity 
 }) => {
   const [showCustomization, setShowCustomization] = useState(false);
+  const [showQuantityModal, setShowQuantityModal] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
     item.variations?.[0]
   );
   const [selectedAddOns, setSelectedAddOns] = useState<(AddOn & { quantity: number })[]>([]);
   const [customQuantity, setCustomQuantity] = useState(1);
+
+  // Reset variation to first one when modal opens
+  useEffect(() => {
+    if (showCustomization && item.variations && item.variations.length > 0) {
+      setSelectedVariation(item.variations[0]);
+      setSelectedAddOns([]);
+      setCustomQuantity(1);
+    }
+  }, [showCustomization, item.variations]);
 
   const calculatePrice = () => {
     // Use variation price as total price, or base price if no variation selected
@@ -37,7 +47,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     if (item.variations?.length || item.addOns?.length) {
       setShowCustomization(true);
     } else {
-      onAddToCart(item, 1);
+      setShowQuantityModal(true);
     }
   };
 
@@ -49,6 +59,12 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     onAddToCart(item, customQuantity, selectedVariation, addOnsForCart);
     setShowCustomization(false);
     setSelectedAddOns([]);
+    setCustomQuantity(1);
+  };
+
+  const handleQuantityModalAddToCart = () => {
+    onAddToCart(item, customQuantity);
+    setShowQuantityModal(false);
     setCustomQuantity(1);
   };
 
@@ -389,6 +405,79 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               >
                 <ShoppingCart className="h-5 w-5" />
                 <span>Add to Cart - ₱{(calculatePrice() * customQuantity).toFixed(2)}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quantity Modal for Simple Items */}
+      {showQuantityModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-gray-900">{item.name}</h3>
+                <button
+                  onClick={() => setShowQuantityModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                >
+                  <X className="h-6 w-6 text-gray-600" />
+                </button>
+              </div>
+              <p className="text-gray-500 mt-1">Select quantity</p>
+            </div>
+
+            <div className="p-6">
+              {/* Image */}
+              <div className="mb-6">
+                <img
+                  src={item.image || 'https://images.pexels.com/photos/4518843/pexels-photo-4518843.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                  alt={item.name}
+                  className="w-full h-48 object-cover rounded-xl"
+                />
+              </div>
+
+              {/* Quantity Selector */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-4 text-center">Quantity</h4>
+                <div className="flex items-center justify-center space-x-4">
+                  <button
+                    onClick={() => setCustomQuantity(Math.max(1, customQuantity - 1))}
+                    className="w-12 h-12 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors duration-200 touch-manipulation"
+                  >
+                    <Minus className="h-5 w-5 sm:h-4 sm:w-4 text-gray-600" />
+                  </button>
+                  <span className="text-2xl font-bold text-gray-900 min-w-[60px] text-center">
+                    {customQuantity}
+                  </span>
+                  <button
+                    onClick={() => setCustomQuantity(Math.min(10, customQuantity + 1))}
+                    className="w-12 h-12 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors duration-200 touch-manipulation"
+                  >
+                    <Plus className="h-5 w-5 sm:h-4 sm:w-4 text-gray-600" />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 text-center mt-2">Max: 10 items</p>
+              </div>
+
+              {/* Price Summary */}
+              <div className="border-t border-gray-200 pt-4 mb-6">
+                <div className="flex items-center justify-between text-2xl font-bold text-gray-900">
+                  <span>Total:</span>
+                  <span className="text-red-600">
+                    ₱{((item.effectivePrice || item.basePrice) * customQuantity).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleQuantityModalAddToCart}
+                className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                <span>Add to Cart - ₱{((item.effectivePrice || item.basePrice) * customQuantity).toFixed(2)}</span>
               </button>
             </div>
           </div>
