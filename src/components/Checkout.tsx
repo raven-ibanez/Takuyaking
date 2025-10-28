@@ -17,7 +17,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
   const [serviceType, setServiceType] = useState<ServiceType>('dine-in');
   const [address, setAddress] = useState('');
   const [landmark, setLandmark] = useState('');
-  const [pickupTime, setPickupTime] = useState('5-10');
+  const [pickupTime, setPickupTime] = useState('');
   const [customTime, setCustomTime] = useState('');
   // Dine-in specific state
   const [partySize, setPartySize] = useState(1);
@@ -265,7 +265,7 @@ Please confirm this order to proceed. Thank you for choosing Takuyaking! 🥟
                         <button
                           key={option.value}
                           type="button"
-                          onClick={() => setPickupTime(option.value)}
+                          onClick={() => setPickupTime(pickupTime === option.value ? '' : option.value)}
                           className={`p-3 rounded-lg border-2 transition-all duration-200 text-sm ${
                             pickupTime === option.value
                               ? 'border-red-600 bg-red-600 text-white'
