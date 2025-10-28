@@ -23,7 +23,6 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
   const [partySize, setPartySize] = useState(1);
   const [dineInTime, setDineInTime] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('gcash');
-  const [referenceNumber, setReferenceNumber] = useState('');
   const [notes, setNotes] = useState('');
 
   React.useEffect(() => {
@@ -107,8 +106,8 @@ Please confirm this order to proceed. Thank you for choosing Takuyaking! 🥟
 
   const isDetailsValid = customerName && contactNumber && 
     (serviceType !== 'delivery' || address) && 
-    (serviceType !== 'pickup' || (pickupTime !== 'custom' || customTime)) &&
-    (serviceType !== 'dine-in' || (partySize > 0 && dineInTime));
+    // Pickup time is optional, even for custom
+    (serviceType !== 'dine-in' || partySize > 0);
 
   if (step === 'details') {
     return (
@@ -239,13 +238,12 @@ Please confirm this order to proceed. Thank you for choosing Takuyaking! 🥟
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-black mb-2">Preferred Time *</label>
+                    <label className="block text-sm font-medium text-black mb-2">Preferred Time</label>
                     <input
                       type="datetime-local"
                       value={dineInTime}
                       onChange={(e) => setDineInTime(e.target.value)}
                       className="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
-                      required
                     />
                     <p className="text-xs text-gray-500 mt-1">Please select your preferred dining time</p>
                   </div>
@@ -255,7 +253,7 @@ Please confirm this order to proceed. Thank you for choosing Takuyaking! 🥟
               {/* Pickup Time Selection */}
               {serviceType === 'pickup' && (
                 <div>
-                  <label className="block text-sm font-medium text-black mb-3">Pickup Time *</label>
+                  <label className="block text-sm font-medium text-black mb-3">Pickup Time</label>
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       {[
@@ -287,7 +285,6 @@ Please confirm this order to proceed. Thank you for choosing Takuyaking! 🥟
                         onChange={(e) => setCustomTime(e.target.value)}
                         className="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
                         placeholder="e.g., 45 minutes, 1 hour, 2:30 PM"
-                        required
                       />
                     )}
                   </div>
